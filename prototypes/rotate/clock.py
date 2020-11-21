@@ -1,13 +1,22 @@
 import pygame
 
-class Player(pygame.sprite.Sprite):
+class Dial(pygame.sprite.Sprite):
 
     def __init__(self, pos=(0, 0), size=(500, 500)):
-        super(Player, self).__init__()
+        super(Dial, self).__init__()
+        self.original_image = pygame.image.load('resources/dial.jpg').convert()
+        self.original_image = pygame.transform.rotozoom(self.original_image, 0, .3)
+        self.image = self.original_image
+        self.rect = self.image.get_rect()
+        self.rect.center = pos
+        self.angle = 0
+
+class Pointer(pygame.sprite.Sprite):
+
+    def __init__(self, pos=(0, 0), size=(500, 500)):
+        super(Pointer, self).__init__()
         self.original_image = pygame.image.load('resources/POINTER.png').convert()
         self.original_image = pygame.transform.rotozoom(self.original_image, 0, .1) 
-        pygame.draw.line(self.original_image, (255, 0, 255), (size[0] / 2, 0), (size[0] / 2, size[1]), 3)
-        pygame.draw.line(self.original_image, (0, 255, 255), (size[1], 0), (0, size[1]), 3)
         self.image = self.original_image
         self.rect = self.image.get_rect()
         self.rect.center = pos
@@ -24,19 +33,24 @@ class Player(pygame.sprite.Sprite):
 
 
 def main():
-    player = Player(pos=(200, 200))
+    clock=pygame.time.Clock()
+    pointer = Pointer(pos=(200, 200))
+    dial    = Dial(pos=(200, 200))
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 raise SystemExit
 
-        player.update()
+        pointer.update()
+
         screen.fill((255, 255, 255))
-        screen.blit(player.image, player.rect)
+        screen.blit(dial.image, dial.rect)
+        screen.blit(pointer.image, pointer.rect)
         pygame.display.update()
-        pygame.time.wait(100)
+        clock.tick(20)
 
 if __name__ == '__main__':
     pygame.init()
-    screen = pygame.display.set_mode((400, 400))
+    infoObject = pygame.display.Info()
+    screen = pygame.display.set_mode(( infoObject.current_w, infoObject.current_h ) ,  pygame.DOUBLEBUF | pygame.RESIZABLE)
     main()
