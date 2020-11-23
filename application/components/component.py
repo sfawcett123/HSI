@@ -6,14 +6,18 @@ class Component(pygame.sprite.Sprite):
 
     RESOURCES = os.path.join( os.path.dirname( __file__ ) , 'resources' )
 
-    def __init__(self, image_file="" , angle=360 ,  pos=(0, 0) , size=(500, 500)):
+    def __init__(self, image_file="" , listener=None , angle=360 ,  pos=(0, 0) , size=(500, 500)):
         super(Component, self).__init__()
         self.image_file = pygame.image.load( os.path.join( self.RESOURCES, image_file)) 
         self.original_image = None 
         self.pos = pos
         self._angle  = angle 
+        self._listener = listener
 
     def update(self , scale=.3 ):
+        if self._listener is not None:
+            self._listener.receive() 
+
         if self.original_image is None :
             self.original_image = self.image_file.convert()
             self.original_image = pygame.transform.rotozoom(self.image_file, 0, scale )
@@ -21,10 +25,17 @@ class Component(pygame.sprite.Sprite):
             self.rect = self.original_image.get_rect()
             self.rect.center = self.pos
 
+    @property
+    def listener(self):
+        return self._listener
 
     @property
     def angle(self):
         return self._angle
+
+    @angle.setter
+    def listener(self, value):
+        self._listener = value
 
     @angle.setter
     def angle(self, value):
