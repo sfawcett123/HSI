@@ -1,6 +1,6 @@
 import pygame
 import os
-
+import logging
 
 class Component(pygame.sprite.Sprite):
 
@@ -54,13 +54,17 @@ class Component(pygame.sprite.Sprite):
     def surface( self , value ):
         self._surface = value
 
-    @angle.setter
+    @listener.setter
     def listener(self, value):
+        logging.debug( "Listener set to {value}".format( value=value ) )
         self._listener = value
 
     @angle.setter
     def angle(self, value):
-        self._angle = value
+        if value is None:
+            value = 0
+
+        self._angle = 360 - value
 
         if self._angle < 0 : self._angle = 360
         if self._angle > 360 : self._angle = 1

@@ -1,5 +1,6 @@
 import pygame
 import os
+import logging
 import application.components.component as component
 
 class Pointer( component.Component ):
@@ -8,5 +9,5 @@ class Pointer( component.Component ):
         super(Pointer, self).__init__( listener=listener , pos=pos , size=size , image_file='HeadingIndicator_Aircraft.bmp' )
 
     def update(self):
-        self.angle -= 1
+        self.angle = self.listener.data.get('heading') 
         super().update()
