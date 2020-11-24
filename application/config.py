@@ -1,4 +1,5 @@
 import pygame
+import application.components.bezal as bezal
 import application.components.dial as dial
 import application.components.pointer as pointer
 import application.connectors.broadcast as broadcast
@@ -8,8 +9,8 @@ class Config:
     listener = broadcast.Broadcast()
 
     controls = [
-         dial.Dial( pos=(200, 200)       , listener=listener) ,
-         pointer.Pointer( pos=(200, 200) , listener=listener)
+         pointer.Pointer( pos=(150,150) , listener=listener ),
+         dial.Dial(       pos=(150,150) , listener=listener) 
     ]
 
 

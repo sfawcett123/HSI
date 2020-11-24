@@ -8,15 +8,15 @@ class Control:
         self._running = True
         self._display_surf = None
         self._debug = True
-        self.instrument = pygame.sprite.Group()
-        for item in self.config.controls:
-            self.instrument.add( item )
 
     def on_init(self):
         pygame.init()
         infoObject = pygame.display.Info()
         size = self.config.window.width , self.config.window.height
         self._display_surf = pygame.display.set_mode( size , pygame.HWSURFACE | pygame.DOUBLEBUF)
+        for item in self.config.controls:
+             item.surface = self._display_surf 
+
         pygame.display.set_caption( self.config.window.title )
         self._display_surf.fill( self.config.window.background )
         pygame.display.flip()
@@ -27,12 +27,13 @@ class Control:
             self._running = False
 
     def on_loop(self):
-        self.instrument.update()
+        self._display_surf.fill( self.config.window.background )
+        for item in self.config.controls:
+            item.update()
+        pygame.display.flip()
 
     def on_render(self):
         self.clock.tick(20)
-        self.instrument.draw( self._display_surf )
-        pygame.display.update()
 
     def on_cleanup(self):
         pygame.quit()
