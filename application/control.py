@@ -33,7 +33,7 @@ class Control:
         pygame.display.flip()
 
     def on_render(self):
-        self.clock.tick(20)
+        self.clock.tick(100)
 
     def on_cleanup(self):
         pygame.quit()

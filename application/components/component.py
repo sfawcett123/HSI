@@ -11,7 +11,8 @@ class Component(pygame.sprite.Sprite):
         self.image_file = pygame.image.load( os.path.join( self.RESOURCES, image_file))
         self.image = None
         self._pos = pos
-        self._angle  = angle 
+        self._required_angle  = angle 
+        self._current_angle  = angle 
         self._listener = listener
         self._surface = None
 
@@ -20,6 +21,12 @@ class Component(pygame.sprite.Sprite):
         self._rect = self.image.get_rect(center = image.get_rect( center = self._pos ).center)
         surf.blit(self.image, self._rect.topleft)
 
+    def rotation( self ,  current , required ):
+        v=( current - required ) % 360
+        if v == 0: return  0
+        if v > 180: return  1
+        return -1
+
     def update(self , scale=1 ):
         if self._listener is not None:
             self._listener.receive() 
@@ -27,8 +34,11 @@ class Component(pygame.sprite.Sprite):
         transColor = self.image_file.get_at((0,0))
         self.image_file.set_colorkey(transColor)
 
+        if self._current_angle != self._required_angle:
+           self._current_angle += self.rotation(self._current_angle , self._required_angle ) 
+
         if self._surface is not None:
-             self.blitRotateCenter(self._surface, self.image_file ,  self._angle) 
+             self.blitRotateCenter(self._surface, self.image_file ,  self._current_angle) 
 
     @property
     def pos(self):
@@ -44,7 +54,7 @@ class Component(pygame.sprite.Sprite):
 
     @property
     def angle(self):
-        return self._angle
+        return self._required_angle
 
     @pos.setter
     def pos( self , value ):
@@ -64,7 +74,5 @@ class Component(pygame.sprite.Sprite):
         if value is None:
             value = 0
 
-        self._angle = 360 - value
-
-        if self._angle < 0 : self._angle = 360
-        if self._angle > 360 : self._angle = 1
+        self._required_angle = 360 - value
+        self._required_angle = self._required_angle % 360
